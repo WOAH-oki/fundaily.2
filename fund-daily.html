@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>fundaily</title>
+        
+        <style>
+            body {font-family: arial;}
+            #fundaily-layout {
+            margin: auto;
+            margin-top: 100px;
+            width: 350px;
+            height: 250px;
+            background-color: grey;
+            border: 5px solid black;
+            border-radius: 15px; 
+            text-align: center;
+            padding: 5px;
+            }
+
+            #fundaily-layout input {
+            border: none;
+            background-color: white;
+            font-size: 15px;
+            padding: 5px;
+            border-radius: 5px;
+            
+            }
+
+            #fundaily-layout h3{font-size: 20px; margin-top: 10px; font-style: normal; background-color: rgb(255, 255, 255); border-radius: 15px;}
+            #fundaily-layout h1{background-color: rgb(95, 93, 93); display: block; background-color: rgb(255, 255, 255); font-size: 30px; border-radius: 15px; border-width: 40px;}
+            #fundaily-layout button{margin-top: 15px; font-weight: bold; padding: 5px; border: 2px solid black; border-radius: 5px; background: rgb(180, 176, 176);}
+        </style>
+
+      </head>
+
+      <body>
+        
+        <div id="fundaily-layout">
+            <h2>WELCOME TO FUNDAILY!</h2>
+            <h3>Total updated balance:</h3>
+            <h1>₱ <span id="balance">0.00</span></h1>
+            <input id="amount" type="number" inputmode="numeric" placeholder="Collected funds today" >
+
+            <br>
+            <button onclick="addFunds()">Add Funds</button>
+            <button onclick="subtractFunds()">Subtract Funds</button>
+            <button onclick="resetFunds()">Reset Balance</button>
+        </div>
+
+        
+       
+        <script>
+
+            // Load previously saved balance
+            let balance = Number(localStorage.getItem("fundailyBalance")) || 0;
+
+            // Update displayed balance
+            function updateBalance() {
+
+                document.getElementById("balance").textContent =
+                    new Intl.NumberFormat("en-PH", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    }).format(balance);
+
+                // Save balance
+                localStorage.setItem("fundailyBalance", balance);
+            }
+
+            // Get entered amount
+            function getAmount() {
+                return Number(document.getElementById("amount").value);
+            }
+
+            // Add funds
+            function addFunds() {
+
+                let amount = getAmount();
+
+                if (!Number.isFinite(amount) || amount <= 0) {
+                    alert("Please enter a valid amount!");
+                    return;
+                }
+
+                balance += amount;
+
+                updateBalance();
+
+                document.getElementById("amount").value = "";
+            }
+
+            // Subtract funds
+            function subtractFunds() {
+
+                let amount = getAmount();
+
+                if (!Number.isFinite(amount) || amount <= 0) {
+                    alert("Please enter a valid amount!");
+                    return;
+                }
+
+                if (amount > balance) {
+                    alert("Insufficient funds!");
+                    return;
+                }
+
+                balance -= amount;
+
+                updateBalance();
+
+                document.getElementById("amount").value = "";
+            }
+
+            // Display saved balance when opening website
+            updateBalance();
+
+            // Reset balance
+function resetFunds() {
+
+    let confirmReset = confirm(
+        "Are you sure you want to reset your total balance?"
+    );
+
+    if (confirmReset) {
+
+        balance = 0;
+
+        updateBalance();
+
+        document.getElementById("amount").value = "";
+
+        alert("FUNDAILY balance has been successfully reset!");
+
+    }
+
+}
+
+        </script>
+     
+
+      </body>
+</html>
